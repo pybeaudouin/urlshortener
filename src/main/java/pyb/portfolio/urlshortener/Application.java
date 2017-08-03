@@ -17,7 +17,9 @@ public class Application implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-		System.out.println("Hello, URL owner!");
+		System.out.println("**********************");
+		System.out.println("* URL Shortener v0.1 *");
+		System.out.println("**********************");
 		ctrl.loop();
 	}
 
