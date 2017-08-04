@@ -18,7 +18,6 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 
-
 @RunWith(SpringRunner.class)
 @WebMvcTest(ShortUrlController.class)
 public class ShortUrlControllerTest {
@@ -43,13 +42,29 @@ public class ShortUrlControllerTest {
 				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
 				.param("url", longUrlStr)
 				.accept(MediaType.TEXT_PLAIN))
-		// Assert
-		.andExpect(status().isOk()).andExpect(result -> {
-			final String serverUrl = result.getRequest().getRequestURL().toString();
+				// Assert
+				.andExpect(status().isOk()).andExpect(result -> {
+					final String serverUrl = result.getRequest().getRequestURL().toString();
 					final String expectedShortUrl = String.format("%s/%s", serverUrl, shortCode);
 					final String actualShortUrl = result.getResponse().getContentAsString();
 					Assert.assertEquals(expectedShortUrl, actualShortUrl);
-		});
+				});
+	}
+
+	@Test
+	public void testShortenInvalidURL() throws Exception {
+		// Prepare
+		final String invalidUrl = "this/URL/is/invalid/";
+
+		// Act
+		final String endpoint = String.format("/%d", ShortUrlController.API_VERSION);
+		this.mvc.perform(post(endpoint)
+				.contentType(MediaType.APPLICATION_FORM_URLENCODED)
+				.param("url", invalidUrl)
+				.accept(MediaType.TEXT_PLAIN))
+				// Assert
+				.andExpect(status().isBadRequest())
+				.andExpect(content().string("Invalid URL"));
 	}
 
 	@Test
@@ -62,8 +77,9 @@ public class ShortUrlControllerTest {
 		// Act
 		final String endpoint = String.format("/%d/%s", ShortUrlController.API_VERSION, shortCode);
 		this.mvc.perform(get(endpoint).accept(MediaType.TEXT_PLAIN))
-		// Assert
-		.andExpect(status().isOk()).andExpect(content().string(longUrlStr));
+			// Assert
+			.andExpect(status().isOk())
+			.andExpect(content().string(longUrlStr));
 	}
 
 	@Test
@@ -75,8 +91,9 @@ public class ShortUrlControllerTest {
 		// Act
 		final String endpoint = String.format("/%d/%s", ShortUrlController.API_VERSION, shortCode);
 		this.mvc.perform(get(endpoint).accept(MediaType.TEXT_PLAIN))
-		// Assert
-		.andExpect(status().isNotFound()).andExpect(content().string("Short code not found"));
+			// Assert
+			.andExpect(status().isNotFound())
+			.andExpect(content().string("Short code not found"));
 	}
 
 }
