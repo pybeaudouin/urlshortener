@@ -16,6 +16,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.extern.slf4j.Slf4j;
 import pyb.portfolio.urlshortener.api.v1.URLShortenService;
+import pyb.portfolio.urlshortener.shorturl.ShortUrl;
+import pyb.portfolio.urlshortener.shorturl.ShortUrlService;
 
 @RestController
 @Slf4j
@@ -25,6 +27,9 @@ public class URLController {
 
 	@Autowired
 	private URLShortenService urlSrv;
+
+	@Autowired
+	private ShortUrlService shortUrlService;
 
 	@RequestMapping(value = "/" + API_VERSION, method = RequestMethod.POST)
 	public ResponseEntity<String> shorten(@RequestParam("url") String urlStr) {
@@ -49,8 +54,13 @@ public class URLController {
 					urlStr, shortCode), e);
 		}
 
-		log.info(String.format("The URL '%s' can be shorten to: %s", urlStr, shortURL.toExternalForm()));
-		return new ResponseEntity<>(shortURL.toExternalForm(), HttpStatus.OK);
+		final String shortUrlStr = shortURL.toExternalForm();
+		log.info(String.format("The URL '%s' can be shorten to: %s", urlStr, shortUrlStr));
+
+		final ShortUrl shortUrl = new ShortUrl(shortCode, urlStr, API_VERSION);
+		shortUrlService.save(shortUrl);
+
+		return new ResponseEntity<>(shortUrlStr, HttpStatus.OK);
 	}
 
 	private URL buildShortURL(String shortCode) throws MalformedURLException {
