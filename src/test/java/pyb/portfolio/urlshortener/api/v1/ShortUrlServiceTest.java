@@ -1,4 +1,4 @@
-package pyb.portfolio.urlshortener.shorturl;
+package pyb.portfolio.urlshortener.api.v1;
 
 import java.net.MalformedURLException;
 import java.net.URL;
