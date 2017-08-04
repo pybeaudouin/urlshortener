@@ -44,4 +44,13 @@ public class ShortUrlServiceImpl implements ShortUrlService {
 		return checksumService.checksum(SHORT_HASH, data);
 	}
 
+	@Override
+	public String longUrl(String shortCode) throws UnknownShortCodeException {
+		final ShortUrl shortUrl = shortUrlRepository.findOne(shortCode);
+		if (shortUrl == null) {
+			throw new UnknownShortCodeException(shortCode);
+		}
+		return shortUrl.getLongUrl();
+	}
+
 }

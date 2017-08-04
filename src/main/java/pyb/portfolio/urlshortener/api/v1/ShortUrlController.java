@@ -7,6 +7,7 @@ import java.net.URL;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,5 +64,22 @@ public class ShortUrlController {
 		builder.pathSegment("{shortCode}");
 		final URI newUri = builder.buildAndExpand(shortCode).toUri();
 		return newUri.toURL();
+	}
+
+	@RequestMapping(value = "/" + API_VERSION + "/{shortCode}", method = RequestMethod.GET)
+	public ResponseEntity<String> expand(@PathVariable("shortCode") String shortCode) {
+		log.info("Expanding URL " + shortCode);
+		String longUrl = null;
+		try {
+			longUrl = shortUrlService.longUrl(shortCode);
+		} catch (final UnknownShortCodeException e) {
+			final String error = String.format("Unknown short code: [%s]", shortCode);
+			log.error(error, e);
+			// SECURITY: don't print the input to avoid Cross-site request forgery
+			return new ResponseEntity<>("Short code not found", HttpStatus.NOT_FOUND);
+		}
+
+		log.info(String.format("The short code '%s' belongs to the URL '%s'", shortCode, longUrl));
+		return new ResponseEntity<>(longUrl, HttpStatus.OK);
 	}
 }
