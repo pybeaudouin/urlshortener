@@ -4,6 +4,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -20,16 +22,19 @@ public class URLController {
 	private URLShortenService urlSrv;
 
 	@RequestMapping(value = "/1", method = RequestMethod.POST)
-	public void shorten(@RequestParam("url") String urlStr) {
+	public ResponseEntity<String> shorten(@RequestParam("url") String urlStr) {
 		log.info("Shortening URL " + urlStr);
 		URL url;
 		try {
 			url = new URL(urlStr);
 		} catch (final MalformedURLException e) {
-			log.error(String.format("'%s' isn't a valid URL: %s", urlStr, e.getMessage()));
-			return;
+			String error = String.format("Invalid URL: [%s]", urlStr);
+			log.error(error, e);
+			// SECURITY: don't print the input to avoid Cross-site request forgery
+			return new ResponseEntity<String>("Invalid URL", HttpStatus.BAD_REQUEST);
 		}
 		final String shortCode = urlSrv.shortCode(url);
 		log.info(String.format("The URL '%s' can be shorten to: %s", urlStr, shortCode));
+		return new ResponseEntity<String>(shortCode, HttpStatus.OK);
 	}
 }
