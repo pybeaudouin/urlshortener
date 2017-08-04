@@ -25,8 +25,8 @@ public class ShortUrlServiceImpl implements ShortUrlService {
 	}
 
 	@Override
-	public void getByShortCode(String shortCode) {
-		shortUrlRepository.findOne(shortCode);
+	public ShortUrl getByShortCode(String shortCode) {
+		return shortUrlRepository.findOne(shortCode);
 	}
 
 	@Autowired

@@ -15,7 +15,7 @@ public interface ShortUrlService {
 	/**
 	 * Retrieves the original (long) URL from its {@link ShortUrl#getShortCode()
 	 * short code}.
-	 * 
+	 *
 	 * @param {@link
 	 * 			ShortUrl#getShortCode() short code}
 	 * @return String representation of the original (long) URL.
@@ -28,6 +28,8 @@ public interface ShortUrlService {
 	/**
 	 * Retrieves a {@link ShortUrl} by its {@link ShortUrl#getShortCode() short
 	 * code}.
+	 * 
+	 * @return
 	 */
-	void getByShortCode(String shortCode);
+	ShortUrl getByShortCode(String shortCode);
 }
