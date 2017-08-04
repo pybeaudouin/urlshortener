@@ -21,6 +21,7 @@ H2 database file. If the database doesn't exist, it will be created.
 ## Usage
 ### Shorten a URL
 Send a POST request to `/1` with the URL to shorten in the `url` field:
+
 `curl --data "url=https://github.com" http://localhost:8080/1/`
 
 ### Expand a short URL
