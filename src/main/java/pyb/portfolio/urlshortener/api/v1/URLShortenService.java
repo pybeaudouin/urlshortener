@@ -4,13 +4,18 @@ import java.net.URL;
 import java.util.zip.CRC32;
 import java.util.zip.Checksum;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import pyb.portfolio.urlshortener.data.ChecksumService;
 
 @Service
 public class URLShortenService {
 
 	// TODO: try https://en.wikipedia.org/wiki/Adler-32, CRC32C
 	private static final Checksum SHORT_HASH = new CRC32();
+	@Autowired
+	private ChecksumService checksumService;
 
 	/**
 	 * Returns 8 characters long code for a given URL.
@@ -20,13 +25,6 @@ public class URLShortenService {
 	 */
 	public String shortCode(URL url) {
 		final byte[] data = url.toString().getBytes();
-		return checksum(data);
-	}
-
-	public String checksum(byte[] data) {
-		SHORT_HASH.reset();
-		SHORT_HASH.update(data, 0, data.length);
-		final long hash = SHORT_HASH.getValue();
-		return Long.toHexString(hash);
+		return checksumService.checksum(SHORT_HASH, data);
 	}
 }
