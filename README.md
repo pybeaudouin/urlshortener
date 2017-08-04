@@ -16,7 +16,7 @@ The jar will be created in the build/lib directory.
 Use the environment variable `H2_DB_LOCATION` to specify the location of the
 H2 database file. If the database doesn't exist, it will be created.
 
-`java -DH2_DB_LOCATION=h2dbfile -jar build/libs/urlshortener-x.y.z.jar`
+`java -DH2_DB_LOCATION=./h2dbfile -jar build/libs/urlshortener-x.y.z.jar`
 
 ## Usage
 ### Shorten a URL
