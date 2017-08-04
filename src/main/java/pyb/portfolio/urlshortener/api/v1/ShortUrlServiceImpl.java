@@ -10,10 +10,25 @@ import org.springframework.stereotype.Service;
 import pyb.portfolio.urlshortener.data.ChecksumService;
 
 @Service
-public class URLShortenService {
-
-	// TODO: try https://en.wikipedia.org/wiki/Adler-32, CRC32C
+public class ShortUrlServiceImpl implements ShortUrlService {
+	/**
+	 * Less than 10 characters and more robust than Adler-32.
+	 */
 	private static final Checksum SHORT_HASH = new CRC32();
+
+	@Autowired
+	private ShortUrlRepository shortUrlRepository;
+
+	@Override
+	public void save(ShortUrl shortUrl) {
+		shortUrlRepository.save(shortUrl);
+	}
+
+	@Override
+	public void getByShortCode(String shortCode) {
+		shortUrlRepository.findOne(shortCode);
+	}
+
 	@Autowired
 	private ChecksumService checksumService;
 
@@ -23,8 +38,10 @@ public class URLShortenService {
 	 * @param url
 	 * @return Alphanumeric code. The code will be the same for two identical URLs.
 	 */
+	@Override
 	public String shortCode(URL url) {
 		final byte[] data = url.toString().getBytes();
 		return checksumService.checksum(SHORT_HASH, data);
 	}
+
 }

@@ -1,4 +1,4 @@
-package pyb.portfolio.urlshortener.shorturl;
+package pyb.portfolio.urlshortener.api.v1;
 
 import org.springframework.data.repository.CrudRepository;
 

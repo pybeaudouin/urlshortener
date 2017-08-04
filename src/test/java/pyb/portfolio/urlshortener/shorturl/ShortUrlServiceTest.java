@@ -1,4 +1,4 @@
-package pyb.portfolio.urlshortener.api.v1;
+package pyb.portfolio.urlshortener.shorturl;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -10,12 +10,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import pyb.portfolio.urlshortener.api.v1.ShortUrlService;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class URLShortenServiceTest {
+public class ShortUrlServiceTest {
 
 	@Autowired
-	private URLShortenService srv;
+	private ShortUrlService srv;
 
 	@Test
 	public void testShorten() throws MalformedURLException {
@@ -23,5 +25,4 @@ public class URLShortenServiceTest {
 		final String actual = srv.shortCode(httpsGithub);
 		Assert.assertEquals("69608d28", actual);
 	}
-
 }

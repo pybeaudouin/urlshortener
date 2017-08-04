@@ -1,4 +1,4 @@
-package pyb.portfolio.urlshortener;
+package pyb.portfolio.urlshortener.api.v1;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -15,18 +15,12 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
 import lombok.extern.slf4j.Slf4j;
-import pyb.portfolio.urlshortener.api.v1.URLShortenService;
-import pyb.portfolio.urlshortener.shorturl.ShortUrl;
-import pyb.portfolio.urlshortener.shorturl.ShortUrlService;
 
 @RestController
 @Slf4j
-public class URLController {
+public class ShortUrlController {
 
 	public static final short API_VERSION = 1;
-
-	@Autowired
-	private URLShortenService urlSrv;
 
 	@Autowired
 	private ShortUrlService shortUrlService;
@@ -43,7 +37,7 @@ public class URLController {
 			// SECURITY: don't print the input to avoid Cross-site request forgery
 			return new ResponseEntity<>("Invalid URL", HttpStatus.BAD_REQUEST);
 		}
-		final String shortCode = urlSrv.shortCode(url);
+		final String shortCode = shortUrlService.shortCode(url);
 
 		URL shortURL = null;
 		try {
