@@ -2,6 +2,9 @@
 
 This is a simple URL shortening service written in Java with Spring Boot.
 
+## Build Status
+[![Build Status](https://travis-ci.org/pybeaudouin/urlshortener.svg?branch=master)](https://travis-ci.org/pybeaudouin/urlshortener)
+
 ## Prerequisites
 - Java 8 or later
 - Gradle 4.0.1 (to build)
